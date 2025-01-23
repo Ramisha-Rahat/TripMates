@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:tripmates/bindings/creatingProfileScreenBinding.dart';
+
+import '../../controller/creatingProfileController.dart';
 
 class Intropage3 extends StatefulWidget {
   const Intropage3({super.key});
@@ -8,7 +12,8 @@ class Intropage3 extends StatefulWidget {
 }
 
 class _Intropage3State extends State<Intropage3> {
-  String selectedRole = ''; // To store the selected role
+
+  final CreatingProfileController _controller = Get.find<CreatingProfileController>();
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +35,7 @@ class _Intropage3State extends State<Intropage3> {
                 ElevatedButton(
                   onPressed: () {
                     setState(() {
-                      selectedRole = 'Traveller';
+                      _controller.selectRole('Traveller');
                     });
                   },
                   style: ElevatedButton.styleFrom(
@@ -46,7 +51,7 @@ class _Intropage3State extends State<Intropage3> {
                 ElevatedButton(
                   onPressed: () {
                     setState(() {
-                      selectedRole = 'Travel Agent';
+                      _controller.selectRole('Travel Agent');
                     });
                   },
                   style: ElevatedButton.styleFrom(
@@ -61,12 +66,12 @@ class _Intropage3State extends State<Intropage3> {
                 const SizedBox(height: 40),
                 // Display the selected role message
                 Text(
-                  selectedRole.isEmpty
+                  _controller.selectedRole.value.isEmpty
                       ? 'Please select your role.'
-                      : 'You have chosen to be a $selectedRole.',
+                      : 'You have chosen to be a ${_controller.selectedRole.value}.',
                   style: TextStyle(
                     fontSize: 18,
-                    color: selectedRole.isEmpty ? Colors.red : Colors.green,
+                    color: _controller.selectedRole.isEmpty ? Colors.red : Colors.green,
                   ),
                   textAlign: TextAlign.center,
                 ),

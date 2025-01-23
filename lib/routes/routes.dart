@@ -2,6 +2,7 @@
 import 'package:get/get.dart';
 import 'package:tripmates/View/AlertScreen/alertScreen.dart';
 import 'package:tripmates/View/CreateProfile/creatingProfileScreen.dart';
+import 'package:tripmates/View/HomeScreenTravelAgent/homePageAgent.dart';
 import 'package:tripmates/View/LoginScreen/LoginPage.dart';
 import 'package:tripmates/View/NearestLocationScreen/locationScreen.dart';
 import 'package:tripmates/View/Profilescreen/agentProfileScreen.dart';
@@ -24,6 +25,7 @@ class AppRoutes {
     GetPage(name: RouteName.alertScreen, page: () => Alertscreen(),),
     GetPage(name: RouteName.communityScreen, page: () => Communityscreen()),
     GetPage(name: RouteName.creatingProfileScreens, page: ()=> CreatingProfileScreen()),
+    GetPage(name: RouteName.homePageAgent, page: ()=> Homepageagent()),
 
   ];
 

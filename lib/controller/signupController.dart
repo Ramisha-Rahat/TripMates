@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../widgets/NavigationBar.dart';
+import '../View/CreateProfile/creatingProfileScreen.dart';
 
 class SignUpController extends GetxController {
   var usernameController = TextEditingController();
@@ -21,7 +21,7 @@ class SignUpController extends GetxController {
           password: passwordController.text,
         );
         isLoading.value = false;
-        Get.offAll(() => NavigationPage()); // Navigate to homepage
+        Get.to(() => CreatingProfileScreen());
       } on FirebaseAuthException catch (e) {
         isLoading.value = false;
         showErrorMessage(context, e.message ?? 'An error occurred');

@@ -1,8 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tripmates/View/CreateProfile/creatingProfileScreen.dart';
-import 'package:tripmates/bindings/creatingProfileScreenBinding.dart';
+import 'package:tripmates/View/LoginScreen/LoginPage.dart';
+import 'package:tripmates/bindings/loginPageBinding.dart';
 import 'package:tripmates/utils/theme/theme.dart';
 import 'firebase_options.dart';
 
@@ -29,10 +29,8 @@ class MyApp extends StatelessWidget {
       getPages: [
         GetPage(
           name: '/',
-          page: () => CreatingProfileScreen(),
-          binding: creatingProfileScreenBinding(),
-          //     SignUpScreen(),
-          // binding:SignUpBinding(),
+          page: () => MyLoginPage(),
+          binding: LoginPageBinding(),
         ),
       ],
     );

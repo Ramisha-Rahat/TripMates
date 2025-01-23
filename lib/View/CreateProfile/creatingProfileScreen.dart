@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tripmates/View/CreateProfile/IntroPageStart.dart';
 import '../../controller/creatingProfileController.dart';
+import '../HomeScreenTravelAgent/homePageAgent.dart';
 import '../HomeScreenTraveller/homePage.dart';
 import 'IntroPage1.dart';
 import 'IntroPage2.dart';
@@ -60,7 +61,20 @@ class CreatingProfileScreen extends StatelessWidget {
                   return _controller.isLastPage.value
                       ? GestureDetector(
                     onTap: () {
-                      Get.to(() => Homepage());
+                      if (_controller.selectedRole.value == 'Traveller') {
+                        Get.to(() => Homepage());
+                      } else if (_controller.selectedRole.value ==
+                          'Travel Agent') {
+                        Get.to(() => Homepageagent());
+                      } else {
+                        Get.snackbar(
+                          'Role Not Selected',
+                          'Please select your role before proceeding.',
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.redAccent,
+                          colorText: Colors.white,
+                        );
+                      }
                     },
                     child: const Text(
                       'Done',

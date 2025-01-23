@@ -2,43 +2,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripmates/View/SignUpScreen/SignUpScreen.dart';
+import 'package:tripmates/controller/loginpageController.dart';
 import 'package:tripmates/services/authservices.dart';
-import '../../widgets/NavigationBar.dart';
 
-class LoginController extends GetxController {
-  final usernameController = TextEditingController();
-  final passwordController = TextEditingController();
-  final isLoading = false.obs; // Observable for loading state
+class MyLoginPage extends StatefulWidget {
 
-  void signin() async {
-    isLoading.value = true; // Show loading spinner
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: usernameController.text,
-        password: passwordController.text,
-      );
-      isLoading.value = false;
-      Get.offAll(() => NavigationPage()); // Navigate to WelcomePage and clear navigation stack
-    } on FirebaseAuthException catch (e) {
-      isLoading.value = false;
-      showErrorMessage(e.message ?? 'An error occurred');
-    }
-  }
-
-  void showErrorMessage(String message) {
-    Get.snackbar(
-      'Error',
-      message,
-      backgroundColor: Colors.redAccent,
-      colorText: Colors.white,
-      snackPosition: SnackPosition.BOTTOM,
-    );
-  }
+  @override
+  State<MyLoginPage> createState() => _MyLoginPageState();
 }
 
-class MyLoginPage extends StatelessWidget {
-  final LoginController controller = Get.put(LoginController()); // Inject LoginController
-
+class _MyLoginPageState extends State<MyLoginPage> {
+  final controller = Get.find<LoginPageController>();
+ // Inject LoginController
   @override
   Widget build(BuildContext context) {
     return Scaffold(

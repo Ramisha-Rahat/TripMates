@@ -11,6 +11,7 @@ class RouteName {
   static const String alertScreen='/AlertScreen';
   static const String communityScreen='/CommunityScreen';
   static const String creatingProfileScreens='/Creatingprofilescreen';
+  static const String homePageAgent='/homePageAgent';
 
 
 }
