@@ -8,6 +8,12 @@ class CreatingProfileController extends GetxController{
   RxBool isLastPage = false.obs;
   RxString selectedRole = ''.obs;
 
+  var userName = ''.obs;
+  var userAddress = ''.obs;
+  var userPhone = ''.obs;
+  var userBio = ''.obs;
+ // var selectedRole = ''.obs;
+
   final Rx<User?> user = FirebaseAuth.instance.currentUser.obs;
   RxString photoUrl = ''.obs;
   RxString displayName = ''.obs;

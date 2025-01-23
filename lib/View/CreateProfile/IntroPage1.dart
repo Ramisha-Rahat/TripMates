@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:tripmates/widgets/custom_textFields.dart';
+
+import '../../controller/creatingProfileController.dart';
+import 'IntroPage2.dart';
 
 class Intropage1 extends StatelessWidget {
    Intropage1({super.key});
@@ -53,6 +58,12 @@ class Intropage1 extends StatelessWidget {
                 SizedBox(height: 10,),
                 ElevatedButton(
                   onPressed: () {
+                    final controller = Get.find<CreatingProfileController>();
+                    controller.userName.value = nameController.text.trim();
+                    controller.userAddress.value = addressController.text.trim();
+                    controller.userPhone.value = phoneNumberController.text.trim();
+                    // Navigate to the next page
+                    Get.to(() => Intropage2());
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white, // Custom background color

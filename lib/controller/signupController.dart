@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../View/CreateProfile/creatingProfileScreen.dart';
 
 class SignUpController extends GetxController {
+
   var usernameController = TextEditingController();
   var passwordController = TextEditingController();
   var rePasswordController = TextEditingController();

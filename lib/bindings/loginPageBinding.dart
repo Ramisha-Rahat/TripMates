@@ -4,6 +4,6 @@ import 'package:tripmates/controller/loginpageController.dart';
 class LoginPageBinding extends Bindings{
   @override
   void dependencies(){
-    Get.lazyPut(() => LoginPageController());
+    Get.lazyPut<LoginPageController>(() => LoginPageController());
   }
 }

@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tripmates/View/HomeScreenTravelAgent/homePageAgent.dart';
+import 'package:tripmates/View/HomeScreenTraveller/homePage.dart';
 import 'package:tripmates/bindings/creatingProfileScreenBinding.dart';
-
 import '../../controller/creatingProfileController.dart';
 
 class Intropage3 extends StatefulWidget {
@@ -33,36 +36,68 @@ class _Intropage3State extends State<Intropage3> {
                 ),
                 const SizedBox(height: 30),
                 ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _controller.selectRole('Traveller');
-                    });
+                  onPressed: () async {
+                    final userId = FirebaseAuth.instance.currentUser?.uid;
+                    final controller = Get.find<CreatingProfileController>();
+
+                    controller.selectRole('Traveller'); // Save selected role
+
+                    final userProfile = {
+                      'name': controller.userName.value,
+                      'address': controller.userAddress.value,
+                      'phone': controller.userPhone.value,
+                      'bio': controller.userBio.value,
+                      'role': controller.selectedRole.value,
+                    };
+
+                    try {
+                      await FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(userId)
+                          .set(userProfile);
+
+                      // Navigate to the respective home screen
+                      Get.to(() => Homepage());
+                    } catch (e) {
+                      print('Error saving profile: $e');
+                      Get.snackbar('Error', 'Failed to save profile. Try again.');
+                    }
                   },
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 30, vertical: 15),
-                  ),
-                  child: const Text(
-                    'I am a Traveller',
-                    style: TextStyle(fontSize: 18),
-                  ),
+                  child: const Text('I am a Traveller'),
                 ),
+
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _controller.selectRole('Travel Agent');
-                    });
+                  onPressed: () async {
+                    final userId = FirebaseAuth.instance.currentUser?.uid;
+                    final controller = Get.find<CreatingProfileController>();
+
+                    controller.selectRole('Travel Agent'); // Save selected role
+
+                    final userProfile = {
+                      'name': controller.userName.value,
+                      'address': controller.userAddress.value,
+                      'phone': controller.userPhone.value,
+                      'bio': controller.userBio.value,
+                      'role': controller.selectedRole.value,
+                    };
+
+                    try {
+                      await FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(userId)
+                          .set(userProfile);
+
+                      // Navigate to the respective home screen
+                      Get.to(() => Homepageagent());
+                    } catch (e) {
+                      print('Error saving profile: $e');
+                      Get.snackbar('Error', 'Failed to save profile. Try again.');
+                    }
                   },
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 30, vertical: 15),
-                  ),
-                  child: const Text(
-                    'I am a Travel Agent',
-                    style: TextStyle(fontSize: 18),
-                  ),
+                  child: const Text('I am a Travell Agent'),
                 ),
+
                 const SizedBox(height: 40),
                 // Display the selected role message
                 Text(
@@ -83,3 +118,4 @@ class _Intropage3State extends State<Intropage3> {
     );
   }
 }
+

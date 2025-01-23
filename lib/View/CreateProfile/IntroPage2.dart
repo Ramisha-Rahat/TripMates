@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../../controller/creatingProfileController.dart';
+import 'IntroPage3.dart';
 
 class Intropage2 extends StatefulWidget {
    Intropage2({super.key});
@@ -46,10 +50,12 @@ class _Intropage2State extends State<Intropage2> {
                   ElevatedButton(
                     onPressed: () {
                       setState(() {
+                      final controller = Get.find<CreatingProfileController>();
                         userBio = _bioController.text.trim();
                         _bioController.clear(); // Clear the TextField after saving
+                      Get.to(() => Intropage3());
                       });
-                    },
+                      },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white, // Custom background color
                       foregroundColor: Colors.black, // Text color
