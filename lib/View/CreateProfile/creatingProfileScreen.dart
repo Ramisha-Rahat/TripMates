@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:tripmates/View/CreateProfile/IntroPageStart.dart';
 import '../../controller/creatingProfileController.dart';
 import '../HomeScreenTraveller/homePage.dart';
 import 'IntroPage1.dart';
@@ -24,7 +25,8 @@ class CreatingProfileScreen extends StatelessWidget {
               _controller.updatePageStatus(index);
             },
             children: [
-              Intropage1(),
+               IntropageStart(),
+               Intropage1(),
                Intropage2(),
                Intropage3(),
             ],
@@ -38,7 +40,7 @@ class CreatingProfileScreen extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    _controller.pageController.jumpToPage(2); // Jump to the last page
+                    _controller.pageController.jumpToPage(3); // Jump to the last page
                   },
                   child: const Text(
                     'Skip',
@@ -47,7 +49,7 @@ class CreatingProfileScreen extends StatelessWidget {
                 ),
                 SmoothPageIndicator(
                   controller: _controller.pageController, // Bind the controller
-                  count: 3,
+                  count: 4,
                   effect: const WormEffect(
                     dotHeight: 8,
                     dotWidth: 8,

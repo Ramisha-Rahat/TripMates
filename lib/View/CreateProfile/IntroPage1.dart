@@ -11,27 +11,62 @@ class Intropage1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SizedBox.expand(
+      resizeToAvoidBottomInset: true,
+      body: Container(
+        color: Theme.of(context).canvasColor,
         child: Container(
-          color: Colors.pinkAccent,
-          child: Center(
-            child: Container(
-              height: 500,
-              child: Center(
-                child: Column(
-                  children: [
-                    Text('Please Enter Your Details as we Continue'),
-                    Text('What is your Good Name'),
-                    CustomTextField(controller: nameController, label: 'Name?', hint: 'Name', icon: Icons.person),
-                    Text('Where we can Contact You'),
-                    CustomTextField(controller: phoneNumberController, label: 'Number', hint: '0301000000', icon: Icons.phone,keyboardType: TextInputType.phone,),
-                    Text('Enter Your Adress Kindly'),
-                    CustomTextField(controller: addressController, label: 'Adress', hint: 'district,state', icon: Icons.place),
-                  ],
+          height: MediaQuery.of(context).size.height,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(height: 30,),
+                Image.asset('assets/images/AppLogo-TripMates.png'),
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Text('Please Enter Your Details as we Continue',
+                  style: TextStyle(
+                    fontSize: 20,
+                  ),),
                 ),
-              )
+                SizedBox(height: 20,),
+                Text('What is your Good Name',
+                style: TextStyle(
+                  fontSize: 20,
+                ),),
+                SizedBox(height: 10,),
+                CustomTextField(controller: nameController, label: 'Name?', hint: 'Name', icon: Icons.person,),
+                SizedBox(height: 20,),
+                Text('Where we can Contact You',
+                  style: TextStyle(
+                  fontSize: 20,
+                ),),
+                SizedBox(height: 10,),
+                CustomTextField(controller: phoneNumberController, label: 'Number', hint: '0301000000', icon: Icons.phone,keyboardType: TextInputType.phone,maxLength: 11,),
+                SizedBox(height: 20,
+                ),
+                Text('Enter Your Adress Kindly',
+                  style: TextStyle(
+                  fontSize: 20,
+                ),),
+                SizedBox(height: 10,),
+                CustomTextField(controller: addressController, label: 'Adress', hint: 'district,state', icon: Icons.place),
+                SizedBox(height: 10,),
+                ElevatedButton(
+                  onPressed: () {
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white, // Custom background color
+                    foregroundColor: Colors.black, // Text color
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10), // Padding
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10), // Rounded corners
+                    ),
+                  ),
+                  child: Text("Save Deatils"),
+                ),
+              ],
             ),
-          ),
+          )
         ),
       ),
     );
