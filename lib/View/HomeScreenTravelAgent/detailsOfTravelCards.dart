@@ -78,10 +78,10 @@ class Detailsoftravelcards extends StatelessWidget {
               ],
             ),
             SizedBox(height: 30,),
-            Center(child: Text('What is including in the package?', style: TextStyle(
-              fontSize: 20,
-              color: Theme.of(context).primaryColor,
-            ),)),
+            // Center(child: Text('What is including in the package?', style: TextStyle(
+            //   fontSize: 20,
+            //   color: Colors.green,
+            // ),)),
 
           ],
         ),
