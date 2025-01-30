@@ -12,6 +12,9 @@ class RouteName {
   static const String communityScreen='/CommunityScreen';
   static const String creatingProfileScreens='/Creatingprofilescreen';
   static const String homePageAgent='/homePageAgent';
+  static const String Detailsoftravelcards='/Detailsoftravelcards';
+
+
 
 
 }

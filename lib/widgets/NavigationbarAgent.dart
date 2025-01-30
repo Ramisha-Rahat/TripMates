@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tripmates/View/HomeScreenTravelAgent/ServiceAgent.dart';
+import 'package:tripmates/View/ServicesofAgent/ServiceAgent.dart';
 import 'package:tripmates/View/HomeScreenTravelAgent/homePageAgent.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
