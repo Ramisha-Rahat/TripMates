@@ -1,12 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tripmates/View/Profilescreen/agentProfileScreen.dart';
 import 'package:tripmates/View/ServicesofAgent/Bookings.dart';
-import 'package:tripmates/View/ServicesofAgent/ServiceAgent.dart';
 import 'package:tripmates/View/HomeScreenTravelAgent/homePageAgent.dart';
+import 'package:tripmates/View/communityScreen/CommunityAgent.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
-
-import '../View/Profilescreen/agentProfileScreen.dart';
 import '../controller/Main_Wrapper_Navigator.dart';
 
 
@@ -25,10 +24,8 @@ class NavigationPageAgent extends StatelessWidget {
         children: [
           Homepageagent(),
           Bookings(),
-          ServiceagentScreen(),
-          Homepageagent(),
+          Communityagent(),
           Agentprofilescreen(),
-          Homepageagent(),
 
         ],
       ),
@@ -55,21 +52,15 @@ class NavigationPageAgent extends StatelessWidget {
                 ),
                 _bottomAppBarItem(
                   context,
-                  icon: Icons.miscellaneous_services_sharp, // Pass IconData here
-                  label: 'Services',
-                  page: 2,
-                ),
-                _bottomAppBarItem(
-                  context,
                   icon: Icons.group_add, // Pass IconData here
                   label: 'Communities',
-                  page: 3,
+                  page: 2,
                 ),
                 _bottomAppBarItem(
                   context,
                   icon: Icons.person, // Pass IconData here
                   label: 'Profile',
-                  page: 4,
+                  page: 3,
                 ),
 
               ],

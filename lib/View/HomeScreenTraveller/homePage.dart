@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,6 +21,19 @@ class Homepage extends StatelessWidget {
     final User? user = FirebaseAuth.instance.currentUser;
     // final String? photoUrl = user?.photoURL; // Get the user's profile picture URL
     //  final String? displayName = user?.displayName; // Get the user's display name
+
+
+    Future<void> sendNotificationToAgent(String agentId, String userName, String packageName) async {
+      FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+      await _firestore.collection('users').doc(agentId).collection('notifications').add({
+        'message': "$userName viewed your package: $packageName",
+        'timestamp': FieldValue.serverTimestamp(),
+        'isRead': false,
+      });
+    }
+
+
 
     return Scaffold(
       body: SingleChildScrollView(
