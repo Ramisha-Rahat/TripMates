@@ -1,10 +1,9 @@
 import 'package:get/get.dart';
+import 'package:tripmates/controller/signupController.dart';
 
-import '../controller/signupController.dart';
-
-class SignUpBinding extends Bindings {
+class SignUpBinding extends Bindings{
   @override
-  void dependencies() {
+  void dependencies(){
     Get.lazyPut<SignUpController>(() => SignUpController());
   }
 }

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripmates/View/HomeScreenTravelAgent/homePageAgent.dart';
 import 'package:tripmates/View/HomeScreenTraveller/homePage.dart';
+import 'package:tripmates/View/Profilescreen/agentProfileScreen.dart';
+import 'package:tripmates/View/Profilescreen/userProfilescreen.dart';
 import 'package:tripmates/bindings/creatingProfileScreenBinding.dart';
 import '../../controller/creatingProfileController.dart';
 
@@ -57,7 +59,8 @@ class _Intropage3State extends State<Intropage3> {
                           .set(userProfile);
 
                       // Navigate to the respective home screen
-                      Get.to(() => Homepage());
+                 //     Get.to(() => Homepage());
+                      Get.to(()=> UserProfileScreen);
                     } catch (e) {
                       print('Error saving profile: $e');
                       Get.snackbar('Error', 'Failed to save profile. Try again.');
@@ -89,7 +92,8 @@ class _Intropage3State extends State<Intropage3> {
                           .set(userProfile);
 
                       // Navigate to the respective home screen
-                      Get.to(() => Homepageagent());
+                    //  Get.to(() => Homepageagent());
+                      Get.to(()=> Agentprofilescreen());
                     } catch (e) {
                       print('Error saving profile: $e');
                       Get.snackbar('Error', 'Failed to save profile. Try again.');

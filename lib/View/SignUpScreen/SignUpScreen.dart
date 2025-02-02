@@ -4,11 +4,17 @@ import 'package:tripmates/View/LoginScreen/LoginPage.dart';
 import 'package:tripmates/controller/signupController.dart';
 import 'package:tripmates/widgets/custom_textFields.dart';
 
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
   SignUpScreen({super.key});
 
   @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+  @override
   Widget build(BuildContext context) {
+
     final controller = Get.find<SignUpController>(); // Access the controller
 
     return Scaffold(
@@ -34,7 +40,7 @@ class SignUpScreen extends StatelessWidget {
               ),
               SizedBox(height: 10),
               CustomTextField(
-                controller: controller.usernameController,
+                controller: controller.emailController,
                 label: 'Username',
                 hint: 'Enter your username',
                 icon: Icons.person,
@@ -67,7 +73,7 @@ class SignUpScreen extends StatelessWidget {
                 padding: EdgeInsets.all(10),
                 margin: EdgeInsets.symmetric(horizontal: 70),
                 child: ElevatedButton(
-                  onPressed: () => controller.register(context),
+                  onPressed: () => controller.register(),
                   // Call register method
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black, // Background color

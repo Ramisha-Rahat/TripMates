@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripmates/View/AlertScreen/alertScreen.dart';
 import 'package:tripmates/View/NearestLocationScreen/locationScreen.dart';
-import 'package:tripmates/View/Profilescreen/userProfilescreen.dart';
 import 'package:tripmates/View/communityScreen/communityScreen.dart';
 import 'package:tripmates/controller/Main_Wrapper_Navigator.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 import '../View/HomeScreenTraveller/homePage.dart';
+import '../View/Profilescreen/userProfilescreen.dart';
 
 class NavigationPage extends StatelessWidget {
    NavigationPage({super.key});
@@ -27,7 +27,7 @@ class NavigationPage extends StatelessWidget {
           Alertscreen(),
           NearestLocationScreen(),
           Communityscreen(),
-          Userprofilescreen(),
+          UserProfileScreen(),
         ],
       ),
       bottomNavigationBar: BottomAppBar(

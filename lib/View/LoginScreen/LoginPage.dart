@@ -12,6 +12,7 @@ class MyLoginPage extends StatefulWidget {
 }
 
 class _MyLoginPageState extends State<MyLoginPage> {
+
   final controller = Get.find<LoginPageController>();
  // Inject LoginController
   @override
