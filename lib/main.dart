@@ -2,9 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripmates/View/LoginScreen/LoginPage.dart';
-import 'package:tripmates/View/Profilescreen/userProfilescreen.dart';
 import 'package:tripmates/bindings/loginPageBinding.dart';
-import 'package:tripmates/bindings/userProfileBinding.dart';
 import 'package:tripmates/utils/theme/theme.dart';
 import 'controller/userProfileController.dart';
 import 'firebase_options.dart';
@@ -35,10 +33,9 @@ class MyApp extends StatelessWidget {
       getPages: [
         GetPage(
           name: '/',
-        //  page: () => MyLoginPage(),
-          //binding: LoginPageBinding(),
-          page: () => UserProfileScreen(),
-          binding: UserProfileBindings(),
+         page: () => MyLoginPage(),
+          binding: LoginPageBinding(),
+
         ),
       ],
     );

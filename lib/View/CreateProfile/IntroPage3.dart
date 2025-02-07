@@ -2,12 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tripmates/View/HomeScreenTravelAgent/homePageAgent.dart';
-import 'package:tripmates/View/HomeScreenTraveller/homePage.dart';
 import 'package:tripmates/View/Profilescreen/agentProfileScreen.dart';
-import 'package:tripmates/View/Profilescreen/userProfilescreen.dart';
-import 'package:tripmates/bindings/creatingProfileScreenBinding.dart';
 import '../../controller/creatingProfileController.dart';
+import '../../widgets/NavigationBar.dart';
 
 class Intropage3 extends StatefulWidget {
   const Intropage3({super.key});
@@ -59,8 +56,9 @@ class _Intropage3State extends State<Intropage3> {
                           .set(userProfile);
 
                       // Navigate to the respective home screen
-                 //     Get.to(() => Homepage());
-                      Get.to(()=> UserProfileScreen);
+                      Get.to(() => NavigationPage());
+
+                      // Get.to(()=> UserProfileScreen);
                     } catch (e) {
                       print('Error saving profile: $e');
                       Get.snackbar('Error', 'Failed to save profile. Try again.');
