@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:tripmates/controller/agentProfileController.dart';
 
 class Agentprofilescreen extends StatefulWidget {
-  const Agentprofilescreen({super.key});
+   Agentprofilescreen({super.key});
 
   @override
   State<Agentprofilescreen> createState() => _AgentprofilescreenState();
@@ -9,161 +11,147 @@ class Agentprofilescreen extends StatefulWidget {
 
 class _AgentprofilescreenState extends State<Agentprofilescreen> {
 
-  String dropdownvalue = 'Traveller';
+  final AgentProfileController _controller=Get.find<AgentProfileController>();
 
-  // List of items in our dropdown menu
-  var profession = [
-    'Traveller',
-    'Travel Agent',
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _controller.fetchUserData();
+  }
 
-  final TextEditingController _bioController = TextEditingController();
-  String? userBio;
+  void _showUpdateDialog(String field, RxString fieldValue) {
+    TextEditingController controller = TextEditingController(text: fieldValue.value);
 
-
+    Get.defaultDialog(
+      title: "Update $field",
+      content: TextField(
+        controller: controller,
+        decoration: InputDecoration(labelText: "Enter new $field"),
+      ),
+      actions: [
+        ElevatedButton(
+          onPressed: () {
+            fieldValue.value = controller.text;
+            _controller.updateUserProfile(); // Update only the modified field
+            Get.back(); // Close dialog
+          },
+          child: Text("Update"),
+        ),
+        TextButton(
+          onPressed: () => Get.back(),
+          child: Text("Cancel"),
+        ),
+      ],
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("User Profile"),
+        title: Text("Travel Agent Profile"),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 20),
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    CircleAvatar(
-                      radius: 70,
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                    ),
-                    Positioned(
-                      bottom: 10,
-                      right: 10,
-                      child: CircleAvatar(
-                        radius: 15, // Adjust size of the inner avatar
-                        backgroundColor: Colors.white, // Background color for contrast
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 20),
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  Obx(() => CircleAvatar(
+                    radius: 70,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    backgroundImage: _controller.photoUrl.value.isNotEmpty
+                        ? NetworkImage(_controller.photoUrl.value) // Show stored image
+                        : null,
+                    child: _controller.photoUrl.value.isEmpty
+                        ? Icon(Icons.person, size: 70, color: Colors.white) // Default icon
+                        : null,
+                  )),
+                  Positioned(
+                    bottom: 10,
+                    right: 10,
+                    child: CircleAvatar(
+                      radius: 15,
+                      backgroundColor: Colors.white,
+                      child: GestureDetector(
+                        onTap: () async {
+                          await _controller.pickAndUploadImage(); // Upload and save
+                        },
                         child: Icon(
                           Icons.add,
                           color: Theme.of(context).colorScheme.secondary,
-                        ), // Add icon
+                        ),
                       ),
                     ),
-                  ],
+                  ),
+                ],
+              ),
+
+
+              SizedBox(height: 10),
+              Text(
+                'Update Your Profile Image',
+                style: TextStyle(fontSize: 16),
+              ),
+              SizedBox(height: 20),
+
+
+              Obx(() => ListTile(
+                title: Text("Name",style: TextStyle(fontSize: 20),),
+                subtitle: Text(_controller.displayName.value, style: TextStyle(color: Theme.of(context).colorScheme.primary),),
+                trailing: IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () => _showUpdateDialog("Name", _controller.displayName),
                 ),
-                SizedBox(height: 10),
-                Text(
-                  'Update Your Profile Image',
-                  style: TextStyle(fontSize: 16),
+              )),
+
+
+              Obx(() => ListTile(
+                title: Text("Email",style: TextStyle(fontSize: 20),),
+                subtitle: Text(_controller.email.value, style: TextStyle(color: Theme.of(context).colorScheme.primary),),
+              )),
+
+              Obx(() => ListTile(
+                title: Text("Phone Number",style: TextStyle(fontSize: 20),),
+                subtitle: Text(_controller.userPhone.value, style: TextStyle(color: Theme.of(context).colorScheme.primary),),
+                trailing: IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () => _showUpdateDialog("Phone Number", _controller.userPhone),
                 ),
-                SizedBox(height: 20),
-                _buildInfoRow("Your Name:", "Ramisha"),
-                _buildInfoRow("Email Address:", "ramisha@123gmail.com"),
-                _buildInfoRow("Phone No:", "+92342001313"),
-                _buildInfoRow("City:", "Karachi"),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Choose You Are:"),
-                    SizedBox(width: 10),
-                    DropdownButton<String>(
-                      value: dropdownvalue,
-                      icon: const Icon(Icons.keyboard_arrow_down),
-                      items: profession.map((String items) {
-                        return DropdownMenuItem(
-                          value: items,
-                          child: Text(items),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownvalue = newValue!;
-                        });
-                      },
-                    ),
-                  ],
+              )),
+
+
+              Obx(() => ListTile(
+                title: Text("City",style: TextStyle(fontSize: 20),),
+                subtitle: Text(_controller.userAddress.value, style: TextStyle(color: Theme.of(context).colorScheme.primary),),
+                trailing: IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () => _showUpdateDialog("City", _controller.userAddress),
                 ),
-                SizedBox(height: 20),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Add Bio:',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(height: 10),
-                          if (userBio != null)
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Your Bio:",
-                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                                ),
-                                SizedBox(height: 10),
-                                Text(
-                                  userBio!,
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                                SizedBox(height: 20),
-                              ],
-                            ),
-                          TextField(
-                            controller: _bioController,
-                            maxLines: 4,
-                            decoration: InputDecoration(
-                              hintText: "Write a short bio about yourself",
-                              border: OutlineInputBorder(),
-                              contentPadding: EdgeInsets.all(12),
-                            ),
-                          ),
-                          SizedBox(height: 20),
-                          ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                userBio = _bioController.text.trim();
-                                _bioController.clear(); // Clear the TextField after saving
-                              });
-                            },
-                            child: Text("Save Bio"),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+              )),
+
+
+              Obx(() => ListTile(
+                title: Text("Role",style: TextStyle(fontSize: 20),),
+                subtitle: Text(_controller.selectedRole.value, style: TextStyle(color: Theme.of(context).colorScheme.primary),),
+              )),
+
+
+              Obx(() => ListTile(
+                title: Text("Bio",style: TextStyle(fontSize: 20),),
+                subtitle: Text(_controller.userBio.value, style: TextStyle(color: Theme.of(context).colorScheme.primary),),
+                trailing: IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () => _showUpdateDialog("Bio", _controller.userBio),
                 ),
-              ],
-            ),
+              )),
+            ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildInfoRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            "$label ",
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          SizedBox(width: 10),
-          Text(value),
-        ],
       ),
     );
   }

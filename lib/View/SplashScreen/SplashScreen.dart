@@ -26,3 +26,18 @@ class _SplashscreenState extends State<Splashscreen> {
     );
   }
 }
+//metgod"
+// void checkUserStatus() async {
+//   User? user = FirebaseAuth.instance.currentUser;
+//   if (user != null) {
+//     var userDoc = await FirebaseFirestore.instance.collection("users").doc(user.uid).get();
+//
+//     if (userDoc.exists && userDoc.data()?["role"] != null && userDoc.data()?["role"].toString().isNotEmpty) {
+//       Get.offAll(() => TravelHomePage()); // User has completed profile setup
+//     } else {
+//       Get.offAll(() => CreatingProfileScreen()); // User needs to set up profile
+//     }
+//   } else {
+//     Get.offAll(() => LoginPage()); // No user logged in
+//   }
+// }

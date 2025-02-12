@@ -4,9 +4,8 @@ import 'package:get/get.dart';
 import 'package:tripmates/View/AlertScreen/alertScreen.dart';
 import 'package:tripmates/View/NearestLocationScreen/locationScreen.dart';
 import 'package:tripmates/View/communityScreen/communityScreen.dart';
-import 'package:tripmates/controller/Main_Wrapper_Navigator.dart';
+import 'package:tripmates/controller/MainWrapperController.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
-
 import '../View/HomeScreenTraveller/homePage.dart';
 import '../View/Profilescreen/userProfilescreen.dart';
 

@@ -6,36 +6,42 @@ import 'package:tripmates/View/ServicesofAgent/Bookings.dart';
 import 'package:tripmates/View/HomeScreenTravelAgent/homePageAgent.dart';
 import 'package:tripmates/View/communityScreen/CommunityAgent.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
-import '../controller/Main_Wrapper_Navigator.dart';
-
+import '../controller/MainWrapperController.dart';
 
 class NavigationPageAgent extends StatelessWidget {
   NavigationPageAgent({super.key});
 
+  MainWrapperController controller = Get.find<MainWrapperController>();
 
-  final MainWrapperController controller=Get.put(MainWrapperController());
+
+
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:PageView(
+      body: Obx(() {
+      return controller.pageController != null
+          ? PageView(
         controller: controller.pageController,
-        physics:  const BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         children: [
           Homepageagent(),
           Bookings(),
           Communityagent(),
-          Agentprofilescreen(),
-
+          Agentprofilescreen()
         ],
-      ),
-      bottomNavigationBar: BottomAppBar(
+      )
+          : Center(child: CircularProgressIndicator());
+    }),
+
+    bottomNavigationBar: BottomAppBar(
         notchMargin: 10,
         child: Container(
           child:Obx(
                 ()=> Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              // Optional for spacing
+// Optional for spacing
               children: [
 
                 _bottomAppBarItem(
@@ -46,13 +52,13 @@ class NavigationPageAgent extends StatelessWidget {
                 ),
                 _bottomAppBarItem(
                   context,
-                  icon: Icons.book_sharp, // Pass IconData here
-                  label: 'Booking',
+                  icon: Icons.bookmark_border_sharp, // Pass IconData here
+                  label: 'Bookings',
                   page: 1,
                 ),
                 _bottomAppBarItem(
                   context,
-                  icon: Icons.group_add, // Pass IconData here
+                  icon: Icons.people_alt, // Pass IconData here
                   label: 'Communities',
                   page: 2,
                 ),
@@ -70,6 +76,8 @@ class NavigationPageAgent extends StatelessWidget {
       ),
     );
   }
+
+
   Widget _bottomAppBarItem(BuildContext context, {
     required icon, // Change the type to IconData
     required  page,
@@ -91,3 +99,5 @@ class NavigationPageAgent extends StatelessWidget {
     );
   }
 }
+
+

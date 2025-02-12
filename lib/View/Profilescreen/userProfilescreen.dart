@@ -58,29 +58,40 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(height: 20),
-               Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    CircleAvatar(
-                      radius: 70,
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                    ),
-                    Positioned(
-                      bottom: 10,
-                      right: 10,
-                      child: CircleAvatar(
-                        radius: 15,
-                        // Adjust size of the inner avatar
-                        backgroundColor: Colors.white,
-                        // Background color for contrast
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  Obx(() => CircleAvatar(
+                    radius: 70,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    backgroundImage: _controller.photoUrl.value.isNotEmpty
+                        ? NetworkImage(_controller.photoUrl.value) // Show stored image
+                        : null,
+                    child: _controller.photoUrl.value.isEmpty
+                        ? Icon(Icons.person, size: 70, color: Colors.white) // Default icon
+                        : null,
+                  )),
+                  Positioned(
+                    bottom: 10,
+                    right: 10,
+                    child: CircleAvatar(
+                      radius: 15,
+                      backgroundColor: Colors.white,
+                      child: GestureDetector(
+                        onTap: () async {
+                          await _controller.pickAndUploadImage(); // Upload and save
+                        },
                         child: Icon(
                           Icons.add,
                           color: Theme.of(context).colorScheme.secondary,
-                        ), // Add icon
+                        ),
                       ),
                     ),
-                  ],
-                    ),
+                  ),
+                ],
+              ),
+
+
               SizedBox(height: 10),
               Text(
                 'Update Your Profile Image',

@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+
 
 class UserProfileController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -42,6 +43,10 @@ class UserProfileController extends GetxController {
       userAddress.value = userSnapshot.data()?["address"] ?? "";
       selectedRole.value = userSnapshot.data()?["role"] ?? "";
       userBio.value = userSnapshot.data()?["bio"] ?? "";
+
+      // Load stored profile image
+      photoUrl.value = userSnapshot.data()?["photoUrl"] ?? "";
+
     }
   }
 
@@ -65,40 +70,47 @@ class UserProfileController extends GetxController {
     }
   }
 
-  // Future<void> pickAndUploadImage() async {
-  //   final picker = ImagePicker();
-  //   final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-  //
-  //   if (pickedFile != null) {
-  //     File imageFile = File(pickedFile.path);
-  //    String imageUrl = await uploadImageToCloudinary(imageFile);
-  //
-  //     if (imageUrl.isNotEmpty) {
-  //       photoUrl.value = imageUrl;
-  //       print('Uploaded image URL: $imageUrl');
-  //     }
-  //   }
-  // }
+  Future<void> pickAndUploadImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
-  // Future<String> uploadImageToCloudinary(File imageFile) async {
-  //   String cloudName = "dlc8c60ap";
-  //   String uploadPreset = "example";
-  //
-  //   var url = Uri.parse('https://api.cloudinary.com/v1_1/dlc8c60ap/image/upload');
-  //   //
-  //   // var request = http.MultipartRequest('POST', url)
-  //   //   ..fields['upload_preset'] = uploadPreset
-  //   //   ..files.add(await http.MultipartFile.fromPath('file', imageFile.path));
-  //   //
-  //   // var response = await request.send();
-  //   //
-  //   // if (response.statusCode == 200) {
-  //   //   var jsonResponse = json.decode(await response.stream.bytesToString());
-  //   //   return jsonResponse['secure_url']; // Cloudinary returns the uploaded image URL
-  //   // } else {
-  //   //   print('Failed to upload image');
-  //   //   return '';
-  //   // }
-  // }
+    if (pickedFile != null) {
+      File imageFile = File(pickedFile.path);
+      String imageUrl = await uploadImageToCloudinary(imageFile);
+
+      if (imageUrl.isNotEmpty) {
+        photoUrl.value = imageUrl; // Update UI instantly
+
+        // Save to Firestore under the current user's document
+        await _firestore.collection("users").doc(user.value?.uid).update({
+          "photoUrl": imageUrl,
+        });
+
+        Get.snackbar("Success", "Profile picture updated!");
+      }
+    }
+  }
+
+
+  Future<String> uploadImageToCloudinary(File imageFile) async {
+    String cloudName = "dlc8c60ap";
+    String uploadPreset = "example";
+
+    var url = Uri.parse('https://api.cloudinary.com/v1_1/$cloudName/image/upload');
+
+    var request = http.MultipartRequest('POST', url)
+      ..fields['upload_preset'] = uploadPreset
+      ..files.add(await http.MultipartFile.fromPath('file', imageFile.path));
+
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      var jsonResponse = json.decode(await response.stream.bytesToString());
+      return jsonResponse['secure_url']; // Cloudinary returns the uploaded image URL
+    } else {
+      print('Failed to upload image. Status Code: ${response.statusCode}');
+      return '';
+    }
+  }
 }
 
