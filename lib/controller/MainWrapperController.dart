@@ -8,10 +8,18 @@ class MainWrapperController extends GetxController {
 
  RxInt currentPage=0.obs;
 
+ // void gotoTab(int page) {
+ //   currentPage.value = page;
+ //   if (pageController.hasClients) {
+ //     pageController.jumpToPage(page);
+ //   }
+ // }
  void gotoTab(int page) {
    currentPage.value = page;
    if (pageController.hasClients) {
      pageController.jumpToPage(page);
+   } else {
+     print("PageController is not initialized yet.");
    }
  }
 

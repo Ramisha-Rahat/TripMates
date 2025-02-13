@@ -32,7 +32,7 @@ class LoginPageController extends GetxController{
             Get.offAll(() => NavigationPage());
           }
           else if(userDoc.data()?["role"]=='Travel Agent'){
-               Get.offAll(()=>NavigationPageAgent());
+               Get.offAll(()=> Navigationbaragent());
           }
         } else {
           Get.offAll(() => CreatingProfileScreen());
