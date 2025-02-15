@@ -10,13 +10,13 @@ class Detailsoftravelcards extends StatelessWidget {
   final String price;
 
   const Detailsoftravelcards(
-  {super.key,
-  required this.image,
-  required this.text,
-  required this.description,
-  required this.price,
-  required this.no_of_days,
-  required this.Stars});
+      {super.key,
+        required this.image,
+        required this.text,
+        required this.description,
+        required this.price,
+        required this.no_of_days,
+        required this.Stars});
 
   @override
   Widget build(BuildContext context) {

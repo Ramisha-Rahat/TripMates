@@ -1,53 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:tripmates/controller/agentHomePageController.dart';
 
-
-class  Addpackage extends StatefulWidget {
-   Addpackage({super.key});
-
-  @override
-  State<Addpackage> createState() => _AddpackageState();
-}
-
-class _AddpackageState extends State<Addpackage> {
-
-  final _formKey = GlobalKey<FormState>();
-
-  final TextEditingController textController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController priceController = TextEditingController();
-  final TextEditingController noOfDaysController = TextEditingController();
-  final TextEditingController starsController = TextEditingController();
-
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  Future<void> addPackageToFirebase() async {
-    User? user = _auth.currentUser; // Get current logged-in user
-    if (user == null) return; // If no user, do nothing
-
-    String userId = user.uid; // Get user ID
-
-    Map<String, dynamic> newPackage = {
-      'image': 'assets/images/AppLogo-TripMates.png',
-      'text': textController.text,
-      'description': descriptionController.text,
-      'price': priceController.text,
-      'no_of_days': noOfDaysController.text,
-      'Stars': starsController.text,
-      'timestamp': FieldValue.serverTimestamp(), // Store time of creation
-    };
-
-    // Store package inside travel agent's document
-    await _firestore
-        .collection('users')
-        .doc(userId)
-        .collection('packages')
-        .add(newPackage);
-
-    Navigator.pop(context); // Go back to homepage after saving
-  }
+class Addpackage extends StatelessWidget {
+  final AgentHomePageController _controller = Get.find<AgentHomePageController>();
 
   @override
   Widget build(BuildContext context) {
@@ -56,49 +12,52 @@ class _AddpackageState extends State<Addpackage> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: textController,
-                decoration: InputDecoration(labelText: "Package Title"),
-                validator: (value) => value!.isEmpty ? "Enter title" : null,
-              ),
-              TextFormField(
-                controller: descriptionController,
-                decoration: InputDecoration(labelText: "Description"),
-                validator: (value) => value!.isEmpty ? "Enter description" : null,
-              ),
-              TextFormField(
-                controller: priceController,
-                decoration: InputDecoration(labelText: "Price"),
-                keyboardType: TextInputType.number,
-                validator: (value) => value!.isEmpty ? "Enter price" : null,
-              ),
-              TextFormField(
-                controller: noOfDaysController,
-                decoration: InputDecoration(labelText: "Number of Days"),
-                keyboardType: TextInputType.number,
-                validator: (value) => value!.isEmpty ? "Enter number of days" : null,
-              ),
-              TextFormField(
-                controller: starsController,
-                decoration: InputDecoration(labelText: "Stars"),
-                keyboardType: TextInputType.number,
-                validator: (value) => value!.isEmpty ? "Enter rating" : null,
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    addPackageToFirebase();
-                  }
-                },
-                child: Text("Add Package"),
-              ),
-            ],
+          key: _controller.formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Obx(() => GestureDetector(
+                  onTap: _controller.pickAndUploadImage,
+                  child: CircleAvatar(
+                    radius: 70,
+                    backgroundColor: Colors.grey[300],
+                    backgroundImage: _controller.photoUrl.value.isNotEmpty
+                        ? NetworkImage(_controller.photoUrl.value)
+                        : null,
+                    child: _controller.photoUrl.value.isEmpty
+                        ? Icon(Icons.camera_alt, size: 50)
+                        : null,
+                  ),
+                )),
+                SizedBox(height: 20),
+                buildTextField("Title", _controller.textController),
+                buildTextField("Description", _controller.descriptionController),
+                buildTextField("Price", _controller.priceController, TextInputType.number),
+                buildTextField("Days", _controller.noOfDaysController, TextInputType.number),
+                buildTextField("Stars", _controller.starsController, TextInputType.number),
+                SizedBox(height: 20),
+                Obx(() => _controller.isLoading.value
+                    ? CircularProgressIndicator()
+                    : ElevatedButton(
+                  onPressed: _controller.uploadImageAndSavePackage,
+                  child: Text("Add Package"),
+                )),
+              ],
+            ),
           ),
         ),
+      ),
+    );
+  }
+
+Widget buildTextField(String label, TextEditingController controller, [TextInputType type = TextInputType.text]) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(labelText: label, border: OutlineInputBorder()),
+        keyboardType: type,
+        validator: (value) => value!.isEmpty ? "Enter $label" : null,
       ),
     );
   }

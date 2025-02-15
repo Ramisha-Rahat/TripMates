@@ -5,17 +5,18 @@ class TravelCardCitywise extends StatelessWidget {
   final String text;
   final String no_of_days;
   final String description;
-  final String Stars;
+  final String stars;
   final String price;
 
-  TravelCardCitywise(
-      {super.key,
-      required this.image,
-      required this.text,
-      required this.description,
-      required this.price,
-      required this.no_of_days,
-      required this.Stars});
+  TravelCardCitywise({
+    super.key,
+    required this.image,
+    required this.text,
+    required this.description,
+    required this.price,
+    required this.no_of_days,
+    required this.stars,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +33,28 @@ class TravelCardCitywise extends StatelessWidget {
             children: [
               // Image Section
               ClipRRect(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
-                child: Image.asset(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+                child: image.isNotEmpty
+                    ? Image.network(
                   image,
+                  height: 180,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return const Center(child: CircularProgressIndicator());
+                  },
+                  errorBuilder: (context, error, stackTrace) {
+                    return Image.asset(
+                      'assets/images/AppLogo-TripMates.png', // Fallback image
+                      height: 180,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    );
+                  },
+                )
+                    : Image.asset(
+                  'assets/images/AppLogo-TripMates.png', // If URL is empty, show default image
                   height: 180,
                   width: double.infinity,
                   fit: BoxFit.cover,
@@ -50,13 +70,13 @@ class TravelCardCitywise extends StatelessWidget {
                     // Title
                     Text(
                       text,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
 
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
 
                     // Description
                     Text(
@@ -69,7 +89,7 @@ class TravelCardCitywise extends StatelessWidget {
                       ),
                     ),
 
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
 
                     // Row for Stars, Price & No. of Days
                     Row(
@@ -78,11 +98,11 @@ class TravelCardCitywise extends StatelessWidget {
                         // Stars
                         Row(
                           children: [
-                            Icon(Icons.star, color: Colors.amber, size: 18),
-                            SizedBox(width: 4),
+                            const Icon(Icons.star, color: Colors.amber, size: 18),
+                            const SizedBox(width: 4),
                             Text(
-                              Stars,
-                              style: TextStyle(
+                              stars,
+                              style: const TextStyle(
                                   fontSize: 14, fontWeight: FontWeight.bold),
                             ),
                           ],
@@ -101,13 +121,12 @@ class TravelCardCitywise extends StatelessWidget {
                         // No. of Days
                         Row(
                           children: [
-                            Icon(Icons.calendar_today,
+                            const Icon(Icons.calendar_today,
                                 size: 16, color: Colors.blueGrey),
-                            SizedBox(width: 4),
+                            const SizedBox(width: 4),
                             Text(
                               "$no_of_days Days",
-                              style:
-                                  TextStyle(fontSize: 14, color: Colors.blueGrey),
+                              style: const TextStyle(fontSize: 14, color: Colors.blueGrey),
                             ),
                           ],
                         ),

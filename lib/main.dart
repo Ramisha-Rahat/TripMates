@@ -4,7 +4,9 @@ import 'package:get/get.dart';
 import 'package:tripmates/View/LoginScreen/LoginPage.dart';
 import 'package:tripmates/bindings/loginPageBinding.dart';
 import 'package:tripmates/controller/MainWrapperController.dart';
+import 'package:tripmates/controller/agentHomePageController.dart';
 import 'package:tripmates/controller/agentProfileController.dart';
+import 'package:tripmates/controller/signupController.dart';
 import 'package:tripmates/utils/theme/theme.dart';
 import 'controller/userProfileController.dart';
 import 'firebase_options.dart';
@@ -18,6 +20,8 @@ void main() async {
   Get.put(UserProfileController());
   Get.put(MainWrapperController());
   Get.put(AgentProfileController());
+  Get.put(AgentHomePageController());
+  Get.put(SignUpController());
 
   runApp(const MyApp());
 }
