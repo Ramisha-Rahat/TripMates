@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../View/HomeScreenTravelAgent/addPackage.dart';
+import '../controller/agentHomePageController.dart';
 
 class TravelCardCitywise extends StatelessWidget {
   final String image;
@@ -7,6 +11,7 @@ class TravelCardCitywise extends StatelessWidget {
   final String description;
   final String stars;
   final String price;
+  final String packageId;
 
   TravelCardCitywise({
     super.key,
@@ -15,11 +20,14 @@ class TravelCardCitywise extends StatelessWidget {
     required this.description,
     required this.price,
     required this.no_of_days,
-    required this.stars,
+    required this.stars, required this.packageId,
   });
 
   @override
   Widget build(BuildContext context) {
+
+    final AgentHomePageController _controller = Get.put(AgentHomePageController());
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -131,7 +139,32 @@ class TravelCardCitywise extends StatelessWidget {
                           ],
                         ),
                       ],
+
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                              onPressed: (){
+                                _controller.edit_package({
+                                      'id': packageId,
+                                      'text': text,
+                                      'description': description,
+                                      'price': price,
+                                      'no_of_days': no_of_days,
+                                      'Stars': stars,
+                                      'image': image,
+                                    });
+                                Get.to(() => Addpackage());
+                              },
+                              icon: Icon(Icons.edit,)),
+                         IconButton(
+                             onPressed: (){
+                               _controller.deletePackage(packageId);
+                             },
+                             icon: Icon(Icons.delete)),
+                        ]
+                    )
                   ],
                 ),
               ),

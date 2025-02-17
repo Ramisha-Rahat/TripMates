@@ -8,7 +8,7 @@ class Addpackage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Add New Travel Package")),
+      appBar: AppBar(title: Text(_controller.isEditMode.value ? "Edit Travel Package" : "Add New Travel Package")),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -39,8 +39,14 @@ class Addpackage extends StatelessWidget {
                 Obx(() => _controller.isLoading.value
                     ? CircularProgressIndicator()
                     : ElevatedButton(
-                  onPressed: _controller.uploadImageAndSavePackage,
-                  child: Text("Add Package"),
+                  onPressed: () {
+                    if (_controller.isEditMode.value) {
+                      _controller.updatePackage(); // Update the package in Firebase
+                    } else {
+                      _controller.uploadImageAndSavePackage(); // Add new package
+                    }
+                  },
+                  child: Text(_controller.isEditMode.value ? "Update Package" : "Add Package"),
                 )),
               ],
             ),
@@ -50,7 +56,7 @@ class Addpackage extends StatelessWidget {
     );
   }
 
-Widget buildTextField(String label, TextEditingController controller, [TextInputType type = TextInputType.text]) {
+  Widget buildTextField(String label, TextEditingController controller, [TextInputType type = TextInputType.text]) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(

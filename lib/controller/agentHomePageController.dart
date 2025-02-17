@@ -64,6 +64,36 @@ class AgentHomePageController extends GetxController {
   }
 
   // Upload Package to Firebase
+  // Future<void> uploadImageAndSavePackage() async {
+  //   if (photoUrl.value.isEmpty) {
+  //     Get.snackbar("Error", "Please select an image");
+  //     return;
+  //   }
+  //
+  //   isLoading.value = true;
+  //
+  //   Map<String, dynamic> newPackage = {
+  //     'image': photoUrl.value,
+  //     'text': textController.text,
+  //     'description': descriptionController.text,
+  //     'price': priceController.text,
+  //     'no_of_days': noOfDaysController.text,
+  //     'Stars': starsController.text,
+  //     'timestamp': FieldValue.serverTimestamp(),
+  //   };
+  //
+  //   await _firestore.collection('users')
+  //       .doc(user.value?.uid)
+  //       .collection('packages')
+  //       .add(newPackage);
+  //
+  //   Get.snackbar("Success", "Package added successfully!");
+  //   fetchPackagesFromFirebase();
+  //   clearFields();
+  //   Get.back();
+  //
+  //   isLoading.value = false;
+  // }
   Future<void> uploadImageAndSavePackage() async {
     if (photoUrl.value.isEmpty) {
       Get.snackbar("Error", "Please select an image");
@@ -89,44 +119,68 @@ class AgentHomePageController extends GetxController {
 
     Get.snackbar("Success", "Package added successfully!");
     fetchPackagesFromFirebase();
-    clearFields();
+    clearFields();  // Clear fields after adding
     Get.back();
 
     isLoading.value = false;
   }
 
+
   // Fetch Packages from Firebase
   Future<void> fetchPackagesFromFirebase() async {
-    User? user = _auth.currentUser;
-    if (user == null) return;
+    try {
+      User? user = _auth.currentUser;
+      if (user == null) {
+        // Handle case where user is not logged in
+        return;
+      }
 
-    QuerySnapshot snapshot = await _firestore
-        .collection('users')
-        .doc(user.uid)
-        .collection('packages')
-        .orderBy('timestamp', descending: true)
-        .get();
+      QuerySnapshot snapshot = await _firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('packages')
+          .orderBy('timestamp', descending: true)
+          .get();
 
-    travelPackages.assignAll(
-      snapshot.docs.map((doc) {
-        var data = doc.data() as Map<String, dynamic>;
-        data['id'] = doc.id;
-        return data;
-      }).toList(),
-    );
+      // If documents are fetched successfully, assign them to the travelPackages list
+      travelPackages.assignAll(
+        snapshot.docs.map((doc) {
+          var data = doc.data() as Map<String, dynamic>;
+          data['id'] = doc.id;  // Add the document ID to the data
+          return data;
+        }).toList(),
+      );
+    } catch (e) {
+      // Handle any errors that may occur
+      print("Error fetching packages: $e");
+    }
   }
+
 
   // Delete Package
   Future<void> deletePackage(String packageId) async {
-    await _firestore.collection('users')
-        .doc(user.value?.uid)
-        .collection('packages')
-        .doc(packageId)
-        .delete();
+    if (packageId.isEmpty) {
+      Get.snackbar("Error", "Package ID is invalid.");
+      return;
+    }
 
-    Get.snackbar("Deleted", "Package has been removed");
-    fetchPackagesFromFirebase();
+    print("Attempting to delete package with ID: $packageId");
+
+    try {
+      await _firestore.collection('users')
+          .doc(user.value?.uid)
+          .collection('packages')
+          .doc(packageId)
+          .delete();
+
+      Get.snackbar("Deleted", "Package has been removed");
+      fetchPackagesFromFirebase();
+    } catch (e) {
+      Get.snackbar("Error", "Failed to delete package: $e");
+    }
   }
+
+
 
   void clearFields() {
     textController.clear();
@@ -135,5 +189,60 @@ class AgentHomePageController extends GetxController {
     noOfDaysController.clear();
     starsController.clear();
     photoUrl.value = "";
+    isEditMode.value = false;  // Ensure edit mode is reset after adding or updating
+    packageId.value = '';
   }
+
+  RxBool isEditMode = false.obs;
+  RxString packageId = ''.obs;
+
+  void edit_package(Map<String, dynamic> packageData) {
+    textController.text = packageData['text'];
+    descriptionController.text = packageData['description'];
+    priceController.text = packageData['price'];
+    noOfDaysController.text = packageData['no_of_days'];
+    starsController.text = packageData['Stars'];
+    photoUrl.value = packageData['image'];
+
+    // Indicate that you are editing, not adding a new package
+    isEditMode.value = true;
+    packageId.value = packageData['id'];
+  }
+
+
+
+  Future<void> updatePackage() async {
+    if (photoUrl.value.isEmpty) {
+      Get.snackbar("Error", "Please select an image");
+      return;
+    }
+
+    isLoading.value = true;
+
+    Map<String, dynamic> updatedPackage = {
+      'image': photoUrl.value,
+      'text': textController.text,
+      'description': descriptionController.text,
+      'price': priceController.text,
+      'no_of_days': noOfDaysController.text,
+      'Stars': starsController.text,
+      'timestamp': FieldValue.serverTimestamp(),
+    };
+
+    await _firestore.collection('users')
+        .doc(user.value?.uid)
+        .collection('packages')
+        .doc(packageId.value)
+        .update(updatedPackage); // Update the package by ID
+
+    Get.snackbar("Success", "Package updated successfully!");
+    fetchPackagesFromFirebase();
+    clearFields();  // Clear fields after update
+    Get.back();
+
+    isLoading.value = false;
+  }
+
+
+
 }

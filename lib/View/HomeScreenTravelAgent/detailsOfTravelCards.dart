@@ -31,7 +31,7 @@ class Detailsoftravelcards extends StatelessWidget {
             Center(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(15),
-                child: Image.asset(image, height: 200, width: double.infinity, fit: BoxFit.cover),
+                child: Image.network(image, height: 200, width: double.infinity, fit: BoxFit.cover),
               ),
             ),
 
