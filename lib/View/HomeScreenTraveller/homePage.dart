@@ -1,8 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripmates/View/LoginScreen/LoginPage.dart';
+import 'package:tripmates/controller/travelGuideCardController.dart';
+import '../../controller/cutsomCardController.dart';
 import '../../widgets/custom_card.dart';
 import '../../widgets/travelGuide_card.dart';
 import '../NearestLocationScreen/locationScreen.dart';
@@ -12,28 +13,27 @@ class Homepage extends StatelessWidget {
 
   void signOut() async {
     await FirebaseAuth.instance.signOut();
-    Get.offAll(() => MyLoginPage()); // Navigate to MyLoginPage and clear the navigation stack
+    Get.offAll(() =>
+        MyLoginPage()); // Navigate to MyLoginPage and clear the navigation stack
   }
-
 
   @override
   Widget build(BuildContext context) {
     final User? user = FirebaseAuth.instance.currentUser;
-    // final String? photoUrl = user?.photoURL; // Get the user's profile picture URL
-    //  final String? displayName = user?.displayName; // Get the user's display name
 
+    // Future<void> sendNotificationToAgent(String agentId, String userName, String packageName) async {
+    //   FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    //
+    //   await _firestore.collection('users').doc(agentId).collection('notifications').add({
+    //     'message': "$userName viewed your package: $packageName",
+    //     'timestamp': FieldValue.serverTimestamp(),
+    //     'isRead': false,
+    //   });
+    // }
 
-    Future<void> sendNotificationToAgent(String agentId, String userName, String packageName) async {
-      FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-      await _firestore.collection('users').doc(agentId).collection('notifications').add({
-        'message': "$userName viewed your package: $packageName",
-        'timestamp': FieldValue.serverTimestamp(),
-        'isRead': false,
-      });
-    }
-
-
+    final CustomCardController _controler = Get.put(CustomCardController());
+    final TravelGuidCardController _controller =
+        Get.put(TravelGuidCardController());
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -69,54 +69,11 @@ class Homepage extends StatelessWidget {
                               signOut();
                             },
                             icon: Icon(Icons.logout)),
-
-                        // IconButton(onPressed: () {},
-                        //     icon: Icon(Icons.person),
-                        // ),
-
-                        // Column(
-                        //   mainAxisAlignment: MainAxisAlignment.center,
-                        //   children: [
-                        //     if (photoUrl != null) // Display profile picture if available
-                        //       CircleAvatar(
-                        //         backgroundImage: NetworkImage(photoUrl),
-                        //         radius: 20,
-                        //       ),
-                        //  SizedBox(height: 20),
-                        // Text('${user}', style: TextStyle(fontSize: 10),),
-                        //],
-                        //),
                       ],
                     ),
                   ),
                   SizedBox(
                     height: 100,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: TextField(
-                      cursorColor: Colors.black,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Theme.of(context).colorScheme.surface,
-                        labelStyle: TextStyle(
-                            color: Theme.of(context).colorScheme.surface),
-                        hintText: 'Type a place to search',
-                        prefixIcon: Icon(Icons.search),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(40),
-                          borderSide: BorderSide(color: Colors.black),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(40),
-                          borderSide: BorderSide(color: Colors.black),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(40),
-                          borderSide: BorderSide(color: Colors.black),
-                        ),
-                      ),
-                    ),
                   ),
                 ],
               ),
@@ -135,10 +92,10 @@ class Homepage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Find the locations nearest to you',
+                      'Find your favourite location yourself',
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.surface,
-                          fontSize: 18),
+                          fontSize: 16),
                     ),
                     SizedBox(
                       width: 10,
@@ -185,22 +142,25 @@ class Homepage extends StatelessWidget {
                       Expanded(
                         child: SizedBox(
                           height: 290,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: 5,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0),
-                                child: CustomCard(
-                                  image: 'assets/images/img.png',
-                                  text: 'Card $index',
-                                  description: 'Description for card $index',
-                                  price: '${20 + index * 5}',
-                                ),
-                              );
-                            },
-                          ),
+                          child: Obx(() {
+                            if (_controler.packages.isEmpty) {
+                              return Text('no data');
+                            }
+                            return ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: _controler.packages.length,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0),
+                                  child: CustomCard(
+                                    package: _controler.packages[
+                                        index], // Pass the package correctly
+                                  ),
+                                );
+                              },
+                            );
+                          }),
                         ),
                       ),
                     ],
@@ -234,23 +194,25 @@ class Homepage extends StatelessWidget {
                       Expanded(
                         child: SizedBox(
                           height: 250,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: 5,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0),
-                                child: TravelguideCard(
-                                  image: 'assets/images/camera.png',
-                                  text: 'Travel Agent $index',
-                                  description: 'Description for agent $index',
-                                  icon: Icons.reviews,
-                                  Rating: 5,
-                                ),
-                              );
-                            },
-                          ),
+                          child: Obx(() {
+                            if (_controller.users.isEmpty) {
+                              return Text('no data');
+                            }
+                            return ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: _controller.users.length,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0),
+                                  child: TravelguideCard(
+                                    user: _controller.users[index],
+                                    Rating: 5,
+                                  ),
+                                );
+                              },
+                            );
+                          }),
                         ),
                       ),
                     ],

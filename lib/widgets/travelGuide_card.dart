@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 class TravelguideCard extends StatelessWidget {
 
-  final String image;
-  final String text;
-  final String description;
-  final  IconData icon;
-  final int Rating;
+  final Rating;
+  final Map<String, String> user;
 
-  const TravelguideCard({super.key, required this.image, required this.text, required this.description, required this.icon, required this.Rating});
+  const TravelguideCard({super.key, required this.user, required this.Rating});
 
   @override
   Widget build(BuildContext context) {
+
+
     return Center(
     child: Card(
       elevation: 8, // Adds shadow effect
@@ -18,26 +17,26 @@ class TravelguideCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(15), // Rounded corners
       ),
       child: Container(
-        width: 200,
+        width: 250,
         padding: EdgeInsets.all(10), // Padding inside the card
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                  child: Image.asset(
-                    image,
-                    height: 70,
-                    width: 70,
+                  borderRadius: BorderRadius.circular(25),
+                  child: Image.network(
+                    user["photoUrl"]?? "",
+                    height: 80,
+                    width: 100,
                   ),
                 ),
                 Row(
                   children: List.generate(
-                    Rating, // Generate stars based on the rating
+                    Rating,
                         (index) => const Icon(Icons.star, color: Colors.amber, size: 20),
                   ),
                 ),
@@ -46,7 +45,7 @@ class TravelguideCard extends StatelessWidget {
             SizedBox(height: 12), // Spacing between image and text
             // Title text
             Text(
-              text,
+              user["name"]?? "",
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -56,7 +55,7 @@ class TravelguideCard extends StatelessWidget {
             SizedBox(height: 8),
             // Subtitle text
             Text(
-              description,
+              user["description"]?? "no bio for now",
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.grey[700],

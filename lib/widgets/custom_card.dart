@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 
 class CustomCard extends StatelessWidget {
+  final Map<String, String> package;
 
-  final String image;
-  final String text;
-  final String description;
-  final String price;
-
-  const CustomCard({super.key, required this.image, required this.text, required this.description, required this.price});
-
+  const CustomCard({super.key, required this.package});
 
   @override
   Widget build(BuildContext context) {
@@ -24,20 +19,21 @@ class CustomCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               Row(
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(15), // Rounded corners for the image
-                    child: Image.asset(
-                      image,
+                    child: Image.network(
+                      package["photoUrl"] ?? "",
                       height: 100,
                       width: 100,
                       fit: BoxFit.cover, // Makes the image cover the container
+                      errorBuilder: (context, error, stackTrace) => Icon(Icons.image_not_supported),
                     ),
                   ),
+                  SizedBox(width: 10),
                   Text(
-                    price,
+                    package["price"] ?? "",
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -46,10 +42,9 @@ class CustomCard extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 12), // Spacing between image and text
-              // Title text
+              SizedBox(height: 12),
               Text(
-                text,
+                package["name"] ?? "",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -57,26 +52,25 @@ class CustomCard extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 8),
-              // Subtitle text
               Text(
-                description,
+                package["description"] ?? "",
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[700],
                 ),
               ),
               SizedBox(height: 12),
-              // Button at the bottom
               Align(
                 alignment: Alignment.centerRight,
                 child: ElevatedButton(
-                  onPressed: () {
-
-                  },
+                  onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.primary,
                   ),
-                  child: Text("Check",style: TextStyle(color: Theme.of(context).colorScheme.surface),),
+                  child: Text(
+                    "Check",
+                    style: TextStyle(color: Theme.of(context).colorScheme.surface),
+                  ),
                 ),
               ),
             ],
