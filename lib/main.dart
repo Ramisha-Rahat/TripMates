@@ -6,6 +6,7 @@ import 'package:tripmates/bindings/loginPageBinding.dart';
 import 'package:tripmates/controller/MainWrapperController.dart';
 import 'package:tripmates/controller/agentHomePageController.dart';
 import 'package:tripmates/controller/agentProfileController.dart';
+import 'package:tripmates/controller/communityPageController.dart';
 import 'package:tripmates/controller/cutsomCardController.dart';
 import 'package:tripmates/controller/loginpageController.dart';
 import 'package:tripmates/controller/signupController.dart';
@@ -30,7 +31,7 @@ void main() async {
   Get.put(TravelGuidCardController());
   Get.put(LoginPageController());
   Get.put(LocationPageController());
-
+  Get.put(CommunityPageController());
 
   runApp(const MyApp());
 }
