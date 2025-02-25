@@ -102,27 +102,40 @@ class AgentHomePageController extends GetxController {
 
     isLoading.value = true;
 
-    Map<String, dynamic> newPackage = {
-      'image': photoUrl.value,
-      'text': textController.text,
-      'description': descriptionController.text,
-      'price': priceController.text,
-      'no_of_days': noOfDaysController.text,
-      'Stars': starsController.text,
-      'timestamp': FieldValue.serverTimestamp(),
-    };
+    try {
+      // Fetch the current agent's name from Firestore
+      DocumentSnapshot userSnapshot =
+      await _firestore.collection('users').doc(user.value?.uid).get();
 
-    await _firestore.collection('users')
-        .doc(user.value?.uid)
-        .collection('packages')
-        .add(newPackage);
+      String agentName = userSnapshot['name'] ?? 'Unknown';
 
-    Get.snackbar("Success", "Package added successfully!");
-    fetchPackagesFromFirebase();
-    clearFields();  // Clear fields after adding
-    Get.back();
+      Map<String, dynamic> newPackage = {
+        'image': photoUrl.value,
+        'text': textController.text,
+        'bio': descriptionController.text,
+        'price': priceController.text,
+        'no_of_days': noOfDaysController.text,
+        'Stars': starsController.text,
+        'agentName': agentName, // Add the agent's name
+        'timestamp': FieldValue.serverTimestamp(),
+      };
 
-    isLoading.value = false;
+      // Save the package under the travel agent's document
+      await _firestore
+          .collection('users')
+          .doc(user.value?.uid)
+          .collection('packages')
+          .add(newPackage);
+
+      Get.snackbar("Success", "Package added successfully!");
+      fetchPackagesFromFirebase();
+      clearFields(); // Clear fields after adding
+      Get.back();
+    } catch (e) {
+      Get.snackbar("Error", "Failed to upload package: $e");
+    } finally {
+      isLoading.value = false;
+    }
   }
 
 

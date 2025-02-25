@@ -8,6 +8,8 @@ class CustomCardController extends GetxController {
 
   final RxList<Map<String, String>> packages = <Map<String, String>>[].obs;
 
+
+
   @override
   void onInit() {
     super.onInit();
@@ -18,16 +20,24 @@ class CustomCardController extends GetxController {
     if (user.value == null) return;
 
     try {
-
+      // Fetch all users with the "Travel Agent" role
       QuerySnapshot agentQuerySnapshot = await _firestore
           .collection("users")
           .where("role", isEqualTo: "Travel Agent")
           .get();
 
-      for (var agentDoc in agentQuerySnapshot.docs) {
+      for (var agent in agentQuerySnapshot.docs) {
+        // Ensure correct fetching of the agent's name and ID
+        Map<String, dynamic> agentData = agent.data() as Map<String, dynamic>;
+        String agentName = agentData["name"] ?? "huehue";
+        String agentId = agent.id;
+
+        print("Fetched Agent: $agentName, ID: $agentId");
+
+        // Listen for package updates within each agent's packages subcollection
         _firestore
             .collection("users")
-            .doc(agentDoc.id)
+            .doc(agentId)
             .collection("packages")
             .snapshots()
             .listen((packageSnapshot) {
@@ -40,10 +50,14 @@ class CustomCardController extends GetxController {
                 "name": data["text"] ?? "",
                 "description": data["description"] ?? "",
                 "price": data["price"] ?? "",
+                "agentName": agentName, // Correct agent name
+                "agentId": agentId,
               });
+
+              print("Package added: ${data["text"]} by $agentName");
             }
           } else {
-            print("No packages found for Travel Agent: ${agentDoc.id}");
+            print("No packages found for Travel Agent: $agentId");
           }
         });
       }
@@ -51,4 +65,5 @@ class CustomCardController extends GetxController {
       print("Error fetching packages: $e");
     }
   }
+
 }

@@ -25,7 +25,7 @@ class NavigationPage extends StatelessWidget {
           Homepage(),
           Alertscreen(),
           NearestLocationScreen(),
-          Communityscreen(),
+          CommunityScreen(),
           UserProfileScreen(),
         ],
       ),

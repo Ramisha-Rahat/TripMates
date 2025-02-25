@@ -23,7 +23,7 @@ class AppRoutes {
     GetPage(name: RouteName.userProfileScreen, page: () => UserProfileScreen(),),
     GetPage(name: RouteName.agentProfileScreen, page: () => Agentprofilescreen(),),
     GetPage(name: RouteName.alertScreen, page: () => Alertscreen(),),
-    GetPage(name: RouteName.communityScreen, page: () => Communityscreen()),
+    GetPage(name: RouteName.communityScreen, page: () => CommunityScreen()),
     GetPage(name: RouteName.creatingProfileScreens, page: ()=> CreatingProfileScreen()),
     GetPage(name: RouteName.homePageAgent, page: ()=> Homepageagent()),
 

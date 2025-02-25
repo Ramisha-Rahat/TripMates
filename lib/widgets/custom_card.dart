@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../View/HomeScreenTraveller/packageDetailPage.dart';
 
 class CustomCard extends StatelessWidget {
   final Map<String, String> package;
@@ -9,25 +11,23 @@ class CustomCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Card(
-        elevation: 8, // Adds shadow effect
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15), // Rounded corners
-        ),
+        elevation: 8,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         child: Container(
           width: 280,
-          padding: EdgeInsets.all(16), // Padding inside the card
+          padding: EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(15), // Rounded corners for the image
+                    borderRadius: BorderRadius.circular(15),
                     child: Image.network(
                       package["photoUrl"] ?? "",
                       height: 100,
                       width: 100,
-                      fit: BoxFit.cover, // Makes the image cover the container
+                      fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) => Icon(Icons.image_not_supported),
                     ),
                   ),
@@ -54,16 +54,15 @@ class CustomCard extends StatelessWidget {
               SizedBox(height: 8),
               Text(
                 package["description"] ?? "",
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[700],
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.grey[700]),
               ),
-              SizedBox(height: 12),
+              SizedBox(height: 8),
               Align(
                 alignment: Alignment.centerRight,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Get.to(() => PackageDetailPage(package: package));
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.primary,
                   ),

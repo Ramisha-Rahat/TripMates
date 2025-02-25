@@ -141,7 +141,7 @@ class Homepage extends StatelessWidget {
                     children: [
                       Expanded(
                         child: SizedBox(
-                          height: 290,
+                          height: 300,
                           child: Obx(() {
                             if (_controler.packages.isEmpty) {
                               return Text('no data');
@@ -206,9 +206,10 @@ class Homepage extends StatelessWidget {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 10.0),
                                   child: TravelguideCard(
-                                    user: _controller.users[index],
-                                    Rating: 5,
+                                    user: _controller.users[index], // Ensure _controller.users is used
+                                    rating: 5,
                                   ),
+
                                 );
                               },
                             );
