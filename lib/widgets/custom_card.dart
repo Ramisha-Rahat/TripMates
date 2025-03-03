@@ -61,7 +61,7 @@ class CustomCard extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: ElevatedButton(
                   onPressed: () {
-                    Get.to(() => PackageDetailPage(package: package));
+        //            Get.to(() => PackageDetailPage(package: package));
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.primary,

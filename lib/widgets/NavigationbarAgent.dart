@@ -108,22 +108,30 @@ import 'package:tripmates/View/communityScreen/CommunityAgent.dart';
 import 'package:tripmates/controller/MainWrapperController.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
+import '../View/AlertScreen/agentAlertScreen.dart';
+import '../services/authservices.dart';
+
 class Navigationbaragent extends StatelessWidget {
   Navigationbaragent({super.key});
 
 
   final MainWrapperController controller = Get.put(MainWrapperController());
+  final AuthServices authServices = AuthServices(); // Instance of AuthServices
 
 
   @override
   Widget build(BuildContext context) {
+    final user = authServices.getCurrentUser();
+    final String userId = user?.uid ?? '';
+
+
     return Scaffold(
       body:PageView(
         controller: controller.pageController,
         physics:  const BouncingScrollPhysics(),
         children: [
           Homepageagent(),
-          Alertscreen(),
+          TravelAgentAlertScreen(agentId: userId),
           Bookings(),
           Communityagent(),
           Agentprofilescreen(),
@@ -146,8 +154,8 @@ class Navigationbaragent extends StatelessWidget {
                 ),
                 _bottomAppBarItem(
                   context,
-                  icon: Icons.add_alert, // Pass IconData here
-                  label: 'Alert',
+                  icon: Icons.ring_volume, // Pass IconData here
+                  label: 'Alerts',
                   page: 1,
                 ),
                 _bottomAppBarItem(

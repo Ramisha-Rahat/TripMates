@@ -22,7 +22,7 @@ class AppRoutes {
     GetPage(name: RouteName.nearestLocationScreen, page: () => NearestLocationScreen(),),
     GetPage(name: RouteName.userProfileScreen, page: () => UserProfileScreen(),),
     GetPage(name: RouteName.agentProfileScreen, page: () => Agentprofilescreen(),),
-    GetPage(name: RouteName.alertScreen, page: () => Alertscreen(),),
+    GetPage(name: RouteName.alertScreen, page: () => AlertScreen(userId: '',),),
     GetPage(name: RouteName.communityScreen, page: () => CommunityScreen()),
     GetPage(name: RouteName.creatingProfileScreens, page: ()=> CreatingProfileScreen()),
     GetPage(name: RouteName.homePageAgent, page: ()=> Homepageagent()),

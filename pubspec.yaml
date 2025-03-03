@@ -46,6 +46,7 @@ dependencies:
   cloud_firestore:
   http:
   image_picker:
+  firebase_messaging:
 
 
 

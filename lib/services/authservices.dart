@@ -1,13 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthServices{
 
-
   final FirebaseAuth _auth=FirebaseAuth.instance;
 
   final FirebaseFirestore _firestore=FirebaseFirestore.instance;
+
+  final FirebaseMessaging _messaging = FirebaseMessaging.instance;
+
+  // Function to save FCM token
+  Future<void> saveUserToken(String userId) async {
+    String? token = await _messaging.getToken();
+    if (token != null) {
+      await _firestore.collection('users').doc(userId).update({
+        'fcmToken': token,
+      });
+      print("FCM Token saved: $token");
+    }
+  }
 
   User? getCurrentUser(){
     return _auth.currentUser;

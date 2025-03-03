@@ -5,10 +5,14 @@
 // import 'package:tripmates/widgets/custom_textFields.dart';
 //
 // class ChatScreen extends StatefulWidget {
-//   final String recieverEmail;
 //   final String receiverId;
+//   final String receiverEmail;
 //
-//   ChatScreen({super.key, required this.recieverEmail, required this.receiverId, required String agentId});
+//   const ChatScreen({
+//     Key? key,
+//     required this.receiverId,
+//     required this.receiverEmail,
+//   }) : super(key: key);
 //
 //   @override
 //   _ChatScreenState createState() => _ChatScreenState();
@@ -28,7 +32,10 @@
 //   }
 //
 //   void _fetchReceiverDetails() async {
-//     DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(widget.receiverId).get();
+//     DocumentSnapshot userDoc = await FirebaseFirestore.instance
+//         .collection('users')
+//         .doc(widget.receiverId)
+//         .get();
 //     if (userDoc.exists) {
 //       setState(() {
 //         receiverPhotoUrl = userDoc["photoUrl"] ?? "";
@@ -56,10 +63,11 @@
 //             CircleAvatar(
 //               backgroundImage: receiverPhotoUrl.isNotEmpty
 //                   ? NetworkImage(receiverPhotoUrl)
-//                   : AssetImage("assets/images/AppLogo-TripMates.png") as ImageProvider,
+//                   : const AssetImage("assets/images/AppLogo-TripMates.png")
+//               as ImageProvider,
 //             ),
-//             SizedBox(width: 10),
-//             Text(widget.recieverEmail),
+//             const SizedBox(width: 10),
+//             Text(widget.receiverEmail),
 //           ],
 //         ),
 //       ),
@@ -79,7 +87,7 @@
 //       stream: _chatService.getMessages(widget.receiverId, senderID),
 //       builder: (context, snapshot) {
 //         if (snapshot.hasError) {
-//           return const Text('Error loading messages');
+//           return const Center(child: Text('Error loading messages'));
 //         }
 //         if (snapshot.connectionState == ConnectionState.waiting) {
 //           return const Center(child: CircularProgressIndicator());
@@ -90,7 +98,9 @@
 //
 //         return ListView(
 //           reverse: true,
-//           children: snapshot.data!.docs.map((doc) => _buildMessageItem(doc)).toList(),
+//           children: snapshot.data!.docs
+//               .map((doc) => _buildMessageItem(doc))
+//               .toList(),
 //         );
 //       },
 //     );
@@ -106,19 +116,21 @@
 //           showDialog(
 //             context: context,
 //             builder: (context) => AlertDialog(
-//               title: Text("Delete Message"),
-//               content: Text("Are you sure you want to delete this message?"),
+//               title: const Text("Delete Message"),
+//               content:
+//               const Text("Are you sure you want to delete this message?"),
 //               actions: [
 //                 TextButton(
 //                   onPressed: () => Navigator.pop(context),
-//                   child: Text("Cancel"),
+//                   child: const Text("Cancel"),
 //                 ),
 //                 TextButton(
 //                   onPressed: () {
 //                     deleteMessage(doc.id);
 //                     Navigator.pop(context);
 //                   },
-//                   child: Text("Delete", style: TextStyle(color: Colors.red)),
+//                   child: const Text("Delete",
+//                       style: TextStyle(color: Colors.red)),
 //                 ),
 //               ],
 //             ),
@@ -128,8 +140,8 @@
 //       child: Align(
 //         alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
 //         child: Container(
-//           margin: EdgeInsets.symmetric(vertical: 4, horizontal: 10),
-//           padding: EdgeInsets.all(10),
+//           margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+//           padding: const EdgeInsets.all(10),
 //           decoration: BoxDecoration(
 //             color: isCurrentUser ? Colors.green[300] : Colors.grey[300],
 //             borderRadius: BorderRadius.circular(15),
@@ -139,13 +151,13 @@
 //             children: [
 //               Text(
 //                 data["messages"] ?? "No Message",
-//                 style: TextStyle(fontSize: 16),
+//                 style: const TextStyle(fontSize: 16),
 //               ),
 //               Align(
 //                 alignment: Alignment.bottomRight,
 //                 child: Text(
 //                   "${data["timestamp"].toDate().hour}:${data["timestamp"].toDate().minute}",
-//                   style: TextStyle(fontSize: 12, color: Colors.black54),
+//                   style: const TextStyle(fontSize: 12, color: Colors.black54),
 //                 ),
 //               ),
 //             ],
@@ -157,7 +169,7 @@
 //
 //   Widget _buildUserInput() {
 //     return Padding(
-//       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+//       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
 //       child: Row(
 //         children: [
 //           Expanded(
@@ -170,164 +182,102 @@
 //           ),
 //           IconButton(
 //             onPressed: sendMessage,
-//             icon: Icon(Icons.send, color: Colors.blue),
+//             icon: const Icon(Icons.send, color: Colors.blue),
 //           ),
 //         ],
 //       ),
 //     );
 //   }
 // }
+// chat_screen.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:tripmates/services/authservices.dart';
-import 'package:tripmates/services/chatService.dart';
-import 'package:tripmates/widgets/custom_textFields.dart';
+import 'package:get/get.dart';
+import '../../controller/chatController.dart';
+import '../../services/chatService.dart';
 
-class ChatScreen extends StatefulWidget {
-  final String receiverEmail;
-  final String receiverId;
+class ChatScreen extends StatelessWidget {
+final String chatRoomId;
+final String receiverId;
+final String receiverName;
 
-  ChatScreen({Key? key, required this.receiverEmail, required this.receiverId}) : super(key: key);
+ChatScreen({
+  required this.chatRoomId,
+  required this.receiverId,
+  required this.receiverName,
+});
 
-  @override
-  _ChatScreenState createState() => _ChatScreenState();
-}
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: Text(receiverName),
+    ),
+    body: Column(
+      children: [
+        Expanded(
+          child: StreamBuilder<QuerySnapshot>(
+            stream: ChatService().getMessages(receiverId, receiverId),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              }
+              if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                return Center(child: Text('No messages yet.'));
+              }
 
-class _ChatScreenState extends State<ChatScreen> {
-  final TextEditingController messageController = TextEditingController();
-  final ChatService _chatService = ChatService();
-  final AuthServices _authServices = AuthServices();
+              final messages = snapshot.data!.docs;
 
-  String receiverPhotoUrl = "";
+              return ListView.builder(
+                itemCount: messages.length,
+                itemBuilder: (context, index) {
+                  final message = messages[index];
+                  final isMe = message['senderID'] == FirebaseAuth.instance.currentUser!.uid;
 
-  @override
-  void initState() {
-    super.initState();
-    _fetchReceiverDetails();
-  }
-
-  void _fetchReceiverDetails() async {
-    DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(widget.receiverId).get();
-    if (userDoc.exists) {
-      setState(() {
-        receiverPhotoUrl = userDoc["photoUrl"] ?? "";
-      });
-    }
-  }
-
-  void sendMessage() async {
-    if (messageController.text.isNotEmpty) {
-      await _chatService.sendMessage(widget.receiverId, messageController.text);
-      messageController.clear();
-    }
-  }
-
-  void deleteMessage(String messageId) async {
-    await _chatService.deleteMessage(widget.receiverId, messageId);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            CircleAvatar(
-              backgroundImage: receiverPhotoUrl.isNotEmpty
-                  ? NetworkImage(receiverPhotoUrl)
-                  : AssetImage("assets/images/AppLogo-TripMates.png") as ImageProvider,
-            ),
-            SizedBox(width: 10),
-            Text(widget.receiverEmail),
-          ],
-        ),
-      ),
-      body: Column(
-        children: [
-          Expanded(child: _buildMessageList()),
-          _buildUserInput(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMessageList() {
-    String senderID = _authServices.getCurrentUser()!.uid;
-
-    return StreamBuilder(
-      stream: _chatService.getMessages(widget.receiverId, senderID),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return const Text('Error loading messages');
-        }
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return const Center(child: Text("No messages yet."));
-        }
-
-        return ListView(
-          reverse: true,
-          children: snapshot.data!.docs.map((doc) => _buildMessageItem(doc)).toList(),
-        );
-      },
-    );
-  }
-
-  Widget _buildMessageItem(QueryDocumentSnapshot doc) {
-    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-    bool isCurrentUser = data["senderID"] == _authServices.getCurrentUser()!.uid;
-
-    return GestureDetector(
-      onLongPress: () {
-        if (isCurrentUser) {
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: Text("Delete Message"),
-              content: Text("Are you sure you want to delete this message?"),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text("Cancel"),
-                ),
-                TextButton(
-                  onPressed: () {
-                    deleteMessage(doc.id);
-                    Navigator.pop(context);
-                  },
-                  child: Text("Delete", style: TextStyle(color: Colors.red)),
-                ),
-              ],
-            ),
-          );
-        }
-      },
-      child: Align(
-        alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
-        child: Container(
-          margin: EdgeInsets.symmetric(vertical: 4, horizontal: 10),
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: isCurrentUser ? Colors.green[300] : Colors.grey[300],
-            borderRadius: BorderRadius.circular(15),
+                  return Align(
+                    alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+                    child: Container(
+                      margin: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                      padding: EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: isMe ? Colors.blue : Colors.grey[300],
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        message['messages'],
+                        style: TextStyle(color: isMe ? Colors.white : Colors.black),
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
           ),
-          child: Text(data["messages"] ?? "No Message"),
         ),
-      ),
-    );
-  }
-
-  Widget _buildUserInput() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      child: Row(
-        children: [
-          Expanded(child: CustomTextField(controller: messageController, hint: 'Type message here', label: '', icon: Icons.edit,)),
-          IconButton(onPressed: sendMessage, icon: Icon(Icons.send, color: Colors.blue)),
-        ],
-      ),
-    );
-  }
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Type a message...',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
+              IconButton(
+                icon: Icon(Icons.send),
+                onPressed: () {
+                  // Implement send message functionality
+                },
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
 }

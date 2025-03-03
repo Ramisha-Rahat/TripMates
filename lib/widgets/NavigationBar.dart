@@ -8,92 +8,95 @@ import 'package:tripmates/controller/MainWrapperController.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 import '../View/HomeScreenTraveller/homePage.dart';
 import '../View/Profilescreen/userProfilescreen.dart';
+import '../services/authservices.dart';
 
 class NavigationPage extends StatelessWidget {
-   NavigationPage({super.key});
+  NavigationPage({super.key});
 
-
-  final MainWrapperController controller=Get.put(MainWrapperController());
+  final MainWrapperController controller = Get.put(MainWrapperController(), permanent: true);
+  final AuthServices authServices = AuthServices(); // Instance of AuthServices
 
   @override
   Widget build(BuildContext context) {
+    final user = authServices.getCurrentUser();
+    final String userId = user?.uid ?? ''; // Get userId safely
+
     return Scaffold(
-      body:PageView(
+      body: PageView(
         controller: controller.pageController,
-        physics:  const BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         children: [
           Homepage(),
-          Alertscreen(),
+          AlertScreen(userId: userId), // Pass the correct userId
           NearestLocationScreen(),
           CommunityScreen(),
           UserProfileScreen(),
-        ],
+        ].where((child) => child != null).toList(), // Ensure no null children
       ),
       bottomNavigationBar: BottomAppBar(
         notchMargin: 10,
-        child: Container(
-          child:Obx(
-           ()=> Row(
+        child: Obx(
+              () => Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            // Optional for spacing
             children: [
-
               _bottomAppBarItem(
-                context,
-                icon: Icons.home, // Pass IconData here
+                icon: Icons.home,
                 label: 'Home',
                 page: 0,
               ),
               _bottomAppBarItem(
-                context,
-                icon: Icons.add_alert, // Pass IconData here
-                label: 'Alert',
+                icon: Icons.notifications,
+                label: 'Alerts',
                 page: 1,
               ),
               _bottomAppBarItem(
-                context,
-                icon: Icons.navigation, // Pass IconData here
-                label: 'navigation',
+                icon: Icons.explore,
+                label: 'Explore',
                 page: 2,
               ),
               _bottomAppBarItem(
-                context,
-                icon: Icons.group_add, // Pass IconData here
-                label: 'Communities',
+                icon: Icons.group,
+                label: 'Community',
                 page: 3,
               ),
               _bottomAppBarItem(
-                context,
-                icon: Icons.person, // Pass IconData here
+                icon: Icons.person,
                 label: 'Profile',
                 page: 4,
               ),
-
             ],
           ),
         ),
       ),
-      ),
     );
   }
-  Widget _bottomAppBarItem(BuildContext context, {
-    required icon, // Change the type to IconData
-    required  page,
-    required  label, // Change the type to String
+
+  Widget _bottomAppBarItem({
+    required IconData icon,
+    required int page,
+    required String label,
   }) {
     return ZoomTapAnimation(
-      onTap: ()=> controller.gotoTab(page),
-    child: Container(
+      onTap: () => controller.gotoTab(page),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon,
-          color: controller.currentPage == page ? Colors.blue : Colors.red,
-          ), // Create the Icon widget here
-          Text(label), // Display the text label here
+          Obx(() => Icon(
+            icon,
+            color: controller.currentPage == page
+                ? Colors.blueAccent // Highlight color
+                : Colors.grey, // Inactive color
+          )),
+          Text(
+            label,
+            style: TextStyle(
+              color: controller.currentPage == page
+                  ? Colors.blueAccent
+                  : Colors.grey,
+            ),
+          ),
         ],
       ),
-    ),
     );
   }
 }

@@ -4,7 +4,7 @@ import 'package:tripmates/controller/alertPageController.dart';
 class Alertpagebinding extends Bindings{
   @override
   void dependencies() {
-    Get.lazyPut<AlertPageController>(()=>AlertPageController());
+   // Get.lazyPut<AlertPageController>(()=>AlertPageController());
   }
 
 }

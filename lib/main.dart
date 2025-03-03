@@ -1,26 +1,37 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tripmates/View/AlertScreen/agentAlertScreen.dart';
 import 'package:tripmates/View/LoginScreen/LoginPage.dart';
 import 'package:tripmates/bindings/loginPageBinding.dart';
 import 'package:tripmates/controller/MainWrapperController.dart';
 import 'package:tripmates/controller/agentHomePageController.dart';
 import 'package:tripmates/controller/agentProfileController.dart';
+import 'package:tripmates/controller/alertAgentConroller.dart';
+import 'package:tripmates/controller/chatController.dart';
 import 'package:tripmates/controller/communityPageController.dart';
 import 'package:tripmates/controller/cutsomCardController.dart';
 import 'package:tripmates/controller/loginpageController.dart';
 import 'package:tripmates/controller/signupController.dart';
 import 'package:tripmates/controller/travelGuideCardController.dart';
 import 'package:tripmates/utils/theme/theme.dart';
+import 'controller/agentCommunityController.dart';
 import 'controller/locationPageController.dart';
 import 'controller/userProfileController.dart';
 import 'firebase_options.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  await messaging.requestPermission();
+
+  runApp(const MyApp());
 
   Get.put(UserProfileController());
   Get.put(MainWrapperController());
@@ -31,7 +42,13 @@ void main() async {
   Get.put(TravelGuidCardController());
   Get.put(LoginPageController());
   Get.put(LocationPageController());
-  Get.put(CommunityPageController());
+   Get.put(CommunityPageController());
+  // Get.put(AgentCommunityController());
+  // Get.put(ChatController());
+  // Get.put(AlertAgentController());
+  // Get.put(AgentHomePageController());
+  // Get.put(AlertAgentController());
+
 
   runApp(const MyApp());
 }
