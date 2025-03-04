@@ -30,14 +30,19 @@ class ChatService {
         .delete();
   }
 
-  Stream<QuerySnapshot> getMessages(String userID, otherUserID) {
-    List<String>ids = [userID, otherUserID];
-    ids.sort();
+  Stream<QuerySnapshot> getMessages(String userID, String otherUserID) {
+    List<String> ids = [userID, otherUserID];
+    ids.sort(); // Ensure consistent chatRoomID
     String chatRoomID = ids.join('_');
 
-    return _firestore.collection("chat_room").doc(chatRoomID).collection(
-        "messages").orderBy('timestamp', descending: false).snapshots();
+    return _firestore
+        .collection("chat_room")
+        .doc(chatRoomID)
+        .collection("messages")
+        .orderBy('timestamp', descending: false) // Oldest to Newest
+        .snapshots();
   }
+
 
   Future<String?> generateChatRoomID(String user1, String user2) async {
     final usersRef = _firestore.collection('users');
